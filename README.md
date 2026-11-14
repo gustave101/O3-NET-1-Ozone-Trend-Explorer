@@ -1,1 +1,21 @@
-O3-NET-1 — Ozone Trend Explorer_261114_171140.txt
+O3-NET-1 — Ozone Trend Detective
+NASA Space Apps Challenge 2026
+ Challenge: Be An Earth System Trend Detective
+O3-NET-1 is an independent, mobile-friendly prototype for exploring atmospheric total-column ozone observations.
+Features
+• Explore ozone observations by location and time period.
+• Analyze monthly averages and seasonal patterns.
+• Estimate long-term trends when sufficient years are available.
+• Review data sources, methodology, and limitations.
+• Export analysis tables as CSV.
+• Explore a bilingual educational story about ozone recovery.
+Data
+The prototype includes Tashkent 2023 OMI/Aura total-column ozone observations retrieved through the NOAA GML OMI/OMPS time-series tool.
+The exact NASA product version still requires confirmation. Other sample regions contain illustrative values and are not NASA observations.
+Run
+Open index.html in a modern web browser. Keep ozone-story.html in the same directory.
+Scientific limitations
+A single year shows seasonal variation, not long-term ozone recovery. A trend requires multiple years of quality-screened observations.
+AI disclosure
+Code, text, and visual design were developed with AI assistance (Claude, Anthropic) and reviewed by the project team.
+O3-NET-1 is an independent prototype. It is not an official NASA project and is not endorsed by NASA.
