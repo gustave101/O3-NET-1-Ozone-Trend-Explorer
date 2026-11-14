@@ -1,0 +1,399 @@
+<!doctype html>
+<!--
+O3-NET-1 Ozone Trend Detective - demo page (single file, no server needed).
+Built with AI assistance (Claude, Anthropic): code, layout and text were drafted with AI and reviewed by the team.
+Real data inside: NASA OMI/Aura total-column ozone for Tashkent (41.3N, 69.3E), 2023, retrieved by the team
+through the NOAA GML "OMI/OMPS Ozone Time Series" tool. Sample regions are made-up numbers for layout testing.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Hand-assembled with AI assistance (Claude, Anthropic)">
+<meta name="description" content="O3-NET-1: explore total-column ozone, see the seasonal cycle and trend, and verify the data source. NASA Space Apps Challenge 2026.">
+<title>O3-NET-1 Ozone Trend Detective</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#14213d;--mute:#4f5a70;--acc:#2a5bd7;--warn:#9a4a05;--warnbg:#fff4e0;--ok:#14663a;--okbg:#e6f6ec;--line:#dde3ef;--orange:#ea7a10}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:72px}
+header{background:var(--ink);color:#fff;padding:14px 16px}
+header h1{margin:0;font-size:18px}
+header p{margin:2px 0 0;font-size:12px;opacity:.85}
+.banner{margin:12px;padding:10px 12px;font-size:13px;border-radius:6px;border-left:4px solid}
+.banner.sample{background:var(--warnbg);color:var(--warn);border-color:var(--warn)}
+.banner.real{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:12px;padding:14px}
+.card h2{margin:0 0 8px;font-size:16px}
+label{display:block;font-size:12px;color:var(--mute);margin:10px 0 4px}
+select,button.act,input[type=file]{width:100%;padding:11px;font-size:15px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.row{display:flex;gap:8px}.row>div{flex:1}
+button.act{background:var(--acc);color:#fff;border:0;margin-top:12px;font-weight:600}
+button.sec{background:#fff;color:var(--acc);border:1px solid var(--acc)}
+.stat{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+.stat:last-child{border:0}.stat b{text-align:right}
+.big{font-size:26px;font-weight:700;margin:4px 0}
+.mute{color:var(--mute);font-size:13px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid var(--line)}
+nav button{flex:1;padding:14px 4px;border:0;background:#fff;font-size:14px;color:var(--mute);font-weight:600}
+nav button.on{color:var(--acc);border-top:3px solid var(--acc);padding-top:11px}
+.view{display:none}.view.on{display:block}
+svg{width:100%;height:auto;display:block}
+ul{padding-left:18px;margin:6px 0}li{margin:5px 0;font-size:14px}
+a{color:var(--acc)}
+.tog{display:flex;gap:6px;margin:8px 0}.tog button{flex:1;padding:8px;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:13px}
+.tog button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.todo{color:var(--warn);font-weight:700}.okk{color:var(--ok);font-weight:700}
+a.linkbtn{display:block;text-align:center;text-decoration:none;color:#fff;background:var(--acc);padding:11px;border-radius:8px;font-weight:600;margin-top:12px}
+.foot{margin:12px;font-size:12px;color:var(--mute)}
+</style>
+</head>
+<body>
+<header>
+  <h1>O3-NET-1 &middot; Ozone Trend Detective</h1>
+  <p>NASA Space Apps Challenge 2026 &middot; Be An Earth System Trend Detective</p>
+</header>
+
+<div class="banner sample" id="banner"></div>
+
+<section id="v-explore" class="view on">
+  <div class="card">
+    <h2>1. Explore</h2>
+    <label for="region">Data source</label>
+    <select id="region"></select>
+    <div class="row">
+      <div><label for="y0">From year</label><select id="y0"></select></div>
+      <div><label for="y1">To year</label><select id="y1"></select></div>
+    </div>
+    <div class="stat"><span>Measurement</span><b>Total-column ozone</b></div>
+    <div class="stat"><span>Unit</span><b>Dobson Units (DU)</b></div>
+    <div class="stat"><span>Data type</span><b id="dtype"></b></div>
+    <button class="act" id="go">Analyze</button>
+    <p class="mute">Total-column ozone is the ozone in the whole air column above a place. It is <b>not</b> the same as ozone pollution near the ground.</p>
+  </div>
+  <div class="card">
+    <h2>Add more years (optional)</h2>
+    <p class="mute">Get a CSV from the NOAA GML &ldquo;OMI/OMPS Ozone Time Series&rdquo; tool for any latitude and longitude, then choose the file(s) here. Several files for different years of the same place are merged. A trend needs at least 3 years.</p>
+    <label for="file">CSV file(s)</label>
+    <input type="file" id="file" accept=".csv,.txt,text/plain,text/csv" multiple>
+    <p class="mute" id="fmsg"></p>
+  </div>
+  <div class="card">
+    <h2>Why does ozone matter?</h2>
+    <p class="mute">A 7-step animated story: how the ozone layer works, what damaged it, and how it is recovering.</p>
+    <a class="linkbtn" href="ozone-story.html">Open the story</a>
+  </div>
+</section>
+
+<section id="v-analyze" class="view">
+  <div class="card">
+    <h2>2. Analyze</h2>
+    <div id="sub" class="mute"></div>
+    <div class="tog" id="tog">
+      <button id="t-raw" class="on">Monthly values</button>
+      <button id="t-des">Without seasons</button>
+    </div>
+    <div id="chart"></div>
+    <div class="mute" id="legend"></div>
+  </div>
+  <div class="card">
+    <div class="mute" id="rlabel">Result</div>
+    <div class="big" id="rate">&ndash;</div>
+    <div class="stat"><span id="l2">95% interval</span><b id="ci">&ndash;</b></div>
+    <div class="stat"><span id="l3">Months used</span><b id="n">&ndash;</b></div>
+    <div class="stat"><span id="l4">Autocorrelation (lag 1)</span><b id="r1">&ndash;</b></div>
+    <p id="explain" style="font-size:14px"></p>
+    <button class="act sec" id="csv">Download table (CSV)</button>
+  </div>
+</section>
+
+<section id="v-verify" class="view">
+  <div class="card">
+    <h2>3. Verify</h2>
+    <p class="mute">Evidence behind the numbers on the Analyze screen.</p>
+    <div id="vlist"></div>
+  </div>
+  <div class="card">
+    <h2>Method</h2>
+    <ul>
+      <li>Daily values are averaged into monthly means (a month needs at least 8 daily values).</li>
+      <li>The yearly cycle is removed by subtracting the average of each calendar month.</li>
+      <li>A straight line is fitted (least squares). The 95% interval is widened if neighbouring months are correlated.</li>
+      <li>A trend is shown only for 3 years or more. We do not say &ldquo;statistically significant&rdquo;: that needs a proper test.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Limitations</h2>
+    <ul>
+      <li>Total-column ozone is not surface ozone.</li>
+      <li>One place (one 0.25&deg; grid cell). Clouds, snow and low sun can add error.</li>
+      <li>The exact product version is still to be confirmed in NASA documentation.</li>
+      <li>O3-NET-1 is an independent concept. It is not an official NASA project, not endorsed by NASA, and not a launched satellite. It is not a health warning or an ozone-hole detector.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Sources</h2>
+    <ul>
+      <li><a href="https://gml.noaa.gov/grad/neubrew/SatO3DataTimeSeries.jsp" target="_blank" rel="noopener">NOAA GML: OMI/OMPS Ozone Time Series tool</a> (used to retrieve the data)</li>
+      <li><a href="https://ozoneaq.gsfc.nasa.gov/data/omi/" target="_blank" rel="noopener">NASA OMI/Aura ozone data</a></li>
+      <li><a href="https://www.earthdata.nasa.gov/" target="_blank" rel="noopener">NASA Earthdata</a></li>
+      <li><a href="https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/" target="_blank" rel="noopener">Challenge page</a></li>
+    </ul>
+  </div>
+  <p class="foot">Built with AI assistance (Claude, Anthropic). Concept, data choice and review by the team.</p>
+</section>
+
+<nav>
+  <button data-v="explore" class="on">Explore</button>
+  <button data-v="analyze">Analyze</button>
+  <button data-v="verify">Verify</button>
+</nav>
+
+<script>
+(function(){
+"use strict";
+var MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var MINOBS=8,MINMONTHS=36;
+/* [year, month, day, O3_interpolated_DU, O3_nearest_DU, flagN]  NASA OMI via NOAA GML, Tashkent 41.3N 69.3E */
+var REAL=[[2023,1,1,302.84,302.0,0],[2023,1,3,320.0,320.0,0],[2023,1,5,287.59,286.0,0],[2023,1,7,289.17,285.0,0],[2023,1,8,302.0,302.0,0],[2023,1,10,328.32,327.0,0],[2023,1,12,386.0,386.0,0],[2023,1,14,368.9,374.0,0],[2023,1,15,348.73,349.0,0],[2023,1,16,331.63,331.0,0],[2023,1,17,347.85,348.0,0],[2023,1,19,387.95,389.0,0],[2023,1,21,356.28,351.0,0],[2023,1,23,344.62,340.0,0],[2023,1,24,382.15,379.0,0],[2023,1,26,363.2,365.0,0],[2023,1,28,355.4,356.0,0],[2023,1,30,352.1,353.0,0],[2023,1,31,370.75,367.0,0],[2023,2,2,357.66,360.0,0],[2023,2,4,353.8,355.0,0],[2023,2,6,351.69,354.0,0],[2023,2,8,371.64,369.0,0],[2023,2,9,388.83,387.0,0],[2023,2,11,380.81,374.0,0],[2023,2,13,363.6,363.0,0],[2023,2,15,322.4,323.0,0],[2023,2,16,302.59,304.0,0],[2023,2,17,295.4,296.0,0],[2023,2,18,328.6,328.0,0],[2023,2,20,398.3,398.0,0],[2023,2,22,357.37,358.0,0],[2023,2,24,316.81,316.0,0],[2023,2,25,337.11,330.0,0],[2023,2,27,337.0,337.0,0],[2023,3,1,327.4,328.0,0],[2023,3,3,311.79,312.0,0],[2023,3,4,332.57,332.0,0],[2023,3,5,329.7,330.0,0],[2023,3,6,324.3,324.0,0],[2023,3,8,291.92,290.0,0],[2023,3,10,311.06,314.0,0],[2023,3,12,278.0,278.0,0],[2023,3,13,296.12,296.0,0],[2023,3,15,341.94,345.0,0],[2023,3,17,349.81,349.0,0],[2023,3,19,337.7,338.0,0],[2023,3,20,335.71,334.0,0],[2023,3,22,347.13,351.0,0],[2023,3,24,351.49,352.0,0],[2023,3,26,335.3,335.0,0],[2023,3,27,362.5,364.0,0],[2023,3,28,350.1,351.0,0],[2023,3,29,333.99,336.0,0],[2023,3,31,299.06,296.0,0],[2023,4,2,345.7,346.0,0],[2023,4,4,326.07,324.0,0],[2023,4,5,339.02,332.0,0],[2023,4,7,346.9,349.0,0],[2023,4,9,295.0,295.0,0],[2023,4,11,312.19,313.0,0],[2023,4,12,315.55,316.0,0],[2023,4,13,303.0,303.0,1],[2023,4,14,267.93,267.0,0],[2023,4,16,297.3,297.0,0],[2023,4,18,338.3,338.0,0],[2023,4,19,348.6,348.0,0],[2023,4,20,372.6,372.0,0],[2023,4,21,385.0,385.0,0],[2023,4,23,295.3,295.0,0],[2023,4,25,324.7,325.0,0],[2023,4,27,357.0,357.0,0],[2023,4,28,370.11,375.0,0],[2023,4,30,322.7,323.0,0],[2023,5,2,318.3,318.0,0],[2023,5,4,319.31,317.0,0],[2023,5,5,321.04,319.0,0],[2023,5,6,321.0,321.0,1],[2023,5,7,344.51,344.0,0],[2023,5,9,311.7,312.0,0],[2023,5,11,294.0,294.0,0],[2023,5,12,323.79,324.0,0],[2023,5,13,332.8,334.0,0],[2023,5,14,314.19,315.0,0],[2023,5,16,305.3,305.0,0],[2023,5,18,331.79,332.0,0],[2023,5,19,326.53,328.0,0],[2023,5,20,314.67,306.0,0],[2023,5,21,314.6,314.0,0],[2023,5,23,312.22,316.0,0],[2023,5,25,351.33,351.0,0],[2023,5,27,358.5,360.0,0],[2023,5,28,352.41,351.0,0],[2023,5,29,354.0,354.0,1],[2023,5,30,359.6,359.0,0],[2023,6,1,339.27,342.0,0],[2023,6,3,339.0,339.0,0],[2023,6,4,337.34,338.0,0],[2023,6,5,330.42,330.0,0],[2023,6,6,317.93,317.0,0],[2023,6,8,296.08,295.0,0],[2023,6,10,311.79,312.0,0],[2023,6,11,300.18,300.0,0],[2023,6,12,307.0,307.0,0],[2023,6,13,307.25,305.0,0],[2023,6,15,301.48,301.0,0],[2023,6,17,306.7,307.0,0],[2023,6,19,290.32,289.0,0],[2023,6,20,288.0,288.0,0],[2023,6,22,289.7,290.0,0],[2023,6,24,286.49,287.0,0],[2023,6,26,322.5,324.0,0],[2023,6,27,306.08,305.0,0],[2023,6,29,310.72,310.0,0],[2023,7,1,307.48,307.0,0],[2023,7,3,308.3,308.0,0],[2023,7,4,316.48,319.0,0],[2023,7,5,312.4,313.0,0],[2023,7,6,332.64,336.0,0],[2023,7,8,331.99,331.0,0],[2023,7,10,321.5,323.0,0],[2023,7,11,296.04,294.0,0],[2023,7,12,283.7,284.0,0],[2023,7,13,285.06,282.0,0],[2023,7,15,287.89,286.0,0],[2023,7,17,286.0,286.0,0],[2023,7,19,284.3,284.0,0],[2023,7,20,286.9,289.0,0],[2023,7,21,267.94,253.0,0],[2023,7,22,294.96,291.0,0],[2023,7,24,261.63,249.0,0],[2023,7,26,272.0,272.0,0],[2023,7,27,290.21,287.0,0],[2023,7,28,313.84,307.0,0],[2023,7,29,293.14,292.0,0],[2023,7,31,292.0,292.0,0],[2023,8,2,293.0,293.0,0],[2023,8,3,274.23,273.0,0],[2023,8,4,275.98,277.0,0],[2023,8,5,276.7,274.0,0],[2023,8,6,315.0,315.0,1],[2023,8,7,303.0,303.0,0],[2023,8,9,311.8,310.0,0],[2023,8,10,300.45,303.0,0],[2023,8,11,309.5,311.0,0],[2023,8,12,296.81,299.0,0],[2023,8,13,329.46,315.0,0],[2023,8,14,325.6,325.0,0],[2023,8,16,307.73,305.0,0],[2023,8,18,312.8,314.0,0],[2023,8,19,289.9,292.0,0],[2023,8,21,287.14,286.0,0],[2023,8,23,281.28,282.0,0],[2023,8,25,292.06,274.0,0],[2023,8,26,290.73,291.0,0],[2023,8,28,325.56,327.0,0],[2023,8,30,291.8,293.0,0],[2023,9,1,287.6,287.0,0],[2023,9,2,297.26,296.0,0],[2023,9,4,304.5,303.0,0],[2023,9,6,306.35,308.0,0],[2023,9,8,294.1,295.0,0],[2023,9,9,309.14,311.0,0],[2023,9,11,278.3,278.0,0],[2023,9,13,274.04,272.0,0],[2023,9,15,269.6,269.0,0],[2023,9,16,286.12,289.0,0],[2023,9,17,293.0,293.0,1],[2023,9,18,287.27,290.0,0],[2023,9,20,302.6,308.0,0],[2023,9,22,298.0,298.0,0],[2023,9,23,294.32,293.0,0],[2023,9,24,309.9,309.0,0],[2023,9,25,302.32,304.0,0],[2023,9,27,308.15,302.0,0],[2023,9,29,320.4,321.0,0],[2023,9,30,303.6,303.0,0],[2023,10,1,314.3,314.0,0],[2023,10,2,299.84,296.0,0],[2023,10,4,301.88,302.0,0],[2023,10,6,305.56,301.0,0],[2023,10,8,317.8,319.0,0],[2023,10,9,316.6,316.0,0],[2023,10,11,301.07,308.0,0],[2023,10,13,311.89,307.0,0],[2023,10,15,330.7,331.0,0],[2023,10,16,311.63,311.0,0],[2023,10,18,290.73,291.0,0],[2023,10,20,286.4,287.0,0],[2023,10,22,289.73,278.0,0],[2023,10,23,297.69,297.0,0],[2023,10,25,284.8,283.0,0],[2023,10,27,294.4,295.0,0],[2023,10,29,292.87,292.0,0],[2023,10,30,272.72,272.0,0],[2023,11,1,282.3,282.0,0],[2023,11,3,263.5,262.0,0],[2023,11,5,270.76,268.0,0],[2023,11,6,306.14,308.0,0],[2023,11,8,264.99,261.0,0],[2023,11,10,272.6,272.0,0],[2023,11,12,279.0,279.0,1],[2023,11,13,291.79,292.0,0],[2023,11,15,269.02,268.0,0],[2023,11,17,259.3,259.0,0],[2023,11,19,261.42,261.0,0],[2023,11,20,302.87,305.0,0],[2023,11,22,299.72,299.0,0],[2023,11,24,340.4,338.0,0],[2023,11,26,297.37,295.0,0],[2023,11,27,319.49,320.0,0],[2023,11,29,326.45,323.0,0],[2023,12,1,286.3,286.0,0],[2023,12,6,274.3,271.0,0],[2023,12,8,293.0,293.0,0],[2023,12,10,288.21,288.0,0],[2023,12,11,332.51,332.0,0],[2023,12,13,312.75,315.0,0],[2023,12,15,310.1,311.0,0],[2023,12,17,326.09,323.0,0],[2023,12,18,330.33,330.0,0],[2023,12,20,335.72,329.0,0],[2023,12,22,300.3,300.0,0],[2023,12,24,276.91,271.0,0],[2023,12,25,320.73,324.0,0],[2023,12,27,345.94,349.0,0],[2023,12,29,336.0,336.0,0],[2023,12,31,339.53,335.0,0]];
+var SAMPLES={
+  s1:{name:"Sample region 1 (made up)",base:292,amp:22,trend:0.25,noise:4,seed:11},
+  s2:{name:"Sample region 2 (made up)",base:270,amp:30,trend:-0.6,noise:5,seed:22},
+  s3:{name:"Sample region 3 (made up)",base:310,amp:35,trend:0.0,noise:6,seed:33},
+  s4:{name:"Sample region 4 (made up)",base:255,amp:12,trend:1.1,noise:3,seed:44}
+};
+function rng(seed){var a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){var u=0,v=0;while(u===0)u=r();while(v===0)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function buildSample(key){
+  var R=SAMPLES[key],r=rng(R.seed),out=[],e=0;
+  for(var y=2005;y<=2024;y++)for(var m=0;m<12;m++){
+    var t=y+(m+0.5)/12;e=0.5*e+gauss(r)*R.noise;
+    out.push({y:y,m:m,t:t,v:R.base+R.amp*Math.sin(2*Math.PI*(m-2)/12)+R.trend*(t-2005)/10+e,n:null});
+  }
+  return out;
+}
+function doy(y,m,d){var c=[31,28,31,30,31,30,31,31,30,31,30,31];if((y%4===0&&y%100!==0)||y%400===0)c[1]=29;var s=d;for(var i=0;i<m-1;i++)s+=c[i];return s;}
+function monthly(daily){
+  var g={},k;
+  daily.forEach(function(r){k=r[0]*12+r[1]-1;(g[k]=g[k]||{y:r[0],m:r[1]-1,s:0,n:0});g[k].s+=r[3];g[k].n++;});
+  return Object.keys(g).map(Number).sort(function(a,b){return a-b;}).map(function(k){var o=g[k];return{y:o.y,m:o.m,t:o.y+(o.m+0.5)/12,v:o.s/o.n,n:o.n};}).filter(function(p){return p.n>=MINOBS;});
+}
+function tcrit(df){return 1.96+2.5/df+3/(df*df);}
+function analyze(pts){
+  var n=pts.length,mm=[],cnt=[],i;
+  for(i=0;i<12;i++){mm.push(0);cnt.push(0);}
+  pts.forEach(function(p){mm[p.m]+=p.v;cnt[p.m]++;});
+  for(i=0;i<12;i++){if(cnt[i]<3)return null;mm[i]/=cnt[i];}
+  var a=pts.map(function(p){return p.v-mm[p.m];});
+  var tb=0,ab=0,vb=0;
+  pts.forEach(function(p,j){tb+=p.t;ab+=a[j];vb+=p.v;});tb/=n;ab/=n;vb/=n;
+  var sxx=0,sxy=0;
+  pts.forEach(function(p,j){sxx+=(p.t-tb)*(p.t-tb);sxy+=(p.t-tb)*(a[j]-ab);});
+  var slope=sxy/sxx;
+  var res=pts.map(function(p,j){return a[j]-(ab+slope*(p.t-tb));});
+  var ss=0,lag=0;res.forEach(function(e,j){ss+=e*e;if(j>0)lag+=e*res[j-1];});
+  var r1=ss>0?lag/ss:0,s2=ss/(n-2),se=Math.sqrt(s2/sxx);
+  var infl=r1>0?Math.sqrt((1+r1)/(1-r1)):1,neff=r1>0?n*(1-r1)/(1+r1):n,df=Math.max(2,neff-2);
+  return{n:n,slope:slope,half:tcrit(df)*se*infl,r1:r1,a:a,tb:tb,ab:ab,vb:vb};
+}
+var $=function(id){return document.getElementById(id);};
+var state={src:"real",daily:{real:REAL,file:[]},meta:{file:null},pts:[],dd:[],res:null,des:false,info:null};
+function isReal(k){return k==="real"||k==="file";}
+function srcPts(k){
+  if(k==="real")return monthly(REAL);
+  if(k==="file")return monthly(state.daily.file);
+  return buildSample(k);
+}
+function fillSources(){
+  var s=$("region");s.innerHTML="";
+  var g1=document.createElement("optgroup");g1.label="Real NASA OMI data";
+  var o=document.createElement("option");o.value="real";o.textContent="Tashkent 41.3°N 69.3°E, 2023";g1.appendChild(o);
+  if(state.daily.file.length){var f=document.createElement("option");f.value="file";f.textContent=state.meta.file||"Your CSV";g1.appendChild(f);}
+  s.appendChild(g1);
+  var g2=document.createElement("optgroup");g2.label="Sample data (made up, for testing only)";
+  Object.keys(SAMPLES).forEach(function(k){var x=document.createElement("option");x.value=k;x.textContent=SAMPLES[k].name;g2.appendChild(x);});
+  s.appendChild(g2);
+  s.value=state.src;
+}
+function fillYears(){
+  var pts=srcPts(state.src),ys=pts.map(function(p){return p.y;});
+  var a=Math.min.apply(null,ys),b=Math.max.apply(null,ys);
+  ["y0","y1"].forEach(function(id){var s=$(id);s.innerHTML="";for(var y=a;y<=b;y++){var o=document.createElement("option");o.value=y;o.textContent=y;s.appendChild(o);}});
+  $("y0").value=a;$("y1").value=b;
+  var real=isReal(state.src);
+  $("banner").className="banner "+(real?"real":"sample");
+  $("banner").innerHTML=real?"<b>REAL DATA:</b> NASA OMI/Aura total-column ozone, retrieved through the NOAA GML time-series tool (0.25&deg; grid). Product version still to be confirmed.":"<b>SAMPLE DATA &mdash; NOT NASA OBSERVATIONS.</b> These numbers are made up to test the layout and the trend method. They have no scientific meaning.";
+  $("dtype").textContent=real?"NASA OMI (real)":"SAMPLE (made up)";
+  $("dtype").className=real?"okk":"todo";
+}
+function show(v){
+  ["explore","analyze","verify"].forEach(function(k){$("v-"+k).classList.toggle("on",k===v);});
+  Array.prototype.forEach.call(document.querySelectorAll("nav button"),function(b){b.classList.toggle("on",b.getAttribute("data-v")===v);});
+  window.scrollTo(0,0);
+}
+function sgn(x,d){return (x>=0?"+":"−")+Math.abs(x).toFixed(d);}
+function srcLabel(){
+  if(state.src==="real")return "Tashkent 41.3°N 69.3°E";
+  if(state.src==="file")return state.meta.file||"Your CSV";
+  return SAMPLES[state.src].name;
+}
+function run(){
+  var y0=+$("y0").value,y1=+$("y1").value;
+  if(y1<y0){var t=y0;y0=y1;y1=t;$("y0").value=y0;$("y1").value=y1;}
+  state.src=$("region").value;
+  var all=srcPts(state.src);
+  state.pts=all.filter(function(p){return p.y>=y0&&p.y<=y1;});
+  state.dd=isReal(state.src)?(state.src==="real"?REAL:state.daily.file).filter(function(r){return r[0]>=y0&&r[0]<=y1;}):[];
+  var real=isReal(state.src);
+  $("sub").textContent=srcLabel()+" · "+y0+"–"+y1+" · "+(real?"NASA OMI":"SAMPLE DATA")+" · DU";
+  state.res=null;
+  var P=state.pts;
+  var yrs=(P.length?P[P.length-1].y-P[0].y+1:0);
+  if(P.length>=MINMONTHS&&yrs>=3)state.res=analyze(P);
+  state.des=false;
+  $("tog").style.display=state.res?"flex":"none";
+  render();
+  show("analyze");
+}
+function render(){
+  var P=state.pts,R=state.res;
+  if(!P.length){$("chart").innerHTML="";$("explain").textContent="No months with enough data in this period.";return;}
+  drawChart();
+  var real=isReal(state.src);
+  if(R){
+    $("rlabel").textContent="Estimated change"+(real?"":" (sample)");
+    var dec=R.slope*10,hd=R.half*10,inc=(dec-hd<=0&&dec+hd>=0);
+    $("rate").textContent=sgn(dec,2)+" DU per decade";
+    $("l2").textContent="95% interval";$("ci").textContent=sgn(dec-hd,2)+" to "+sgn(dec+hd,2);
+    $("l3").textContent="Months used";$("n").textContent=R.n;
+    $("l4").textContent="Autocorrelation (lag 1)";$("r1").textContent=R.r1.toFixed(2);
+    $("explain").textContent="After removing the yearly cycle, the ozone value is "+(dec>0?"rising":"falling")+" by about "+Math.abs(dec).toFixed(2)+" DU per decade over "+P[0].y+"–"+P[P.length-1].y+". The 95% interval "+(inc?"includes":"does not include")+" zero. "+(real?"This is an estimate for one place and one period. It is not proof of a cause, and no significance test was applied.":"These are made-up numbers, not NASA observations.");
+  }else{
+    var mn=P[0],mx=P[0];P.forEach(function(p){if(p.v<mn.v)mn=p;if(p.v>mx.v)mx=p;});
+    $("rlabel").textContent="Seasonal range";
+    $("rate").textContent=Math.round(mn.v)+" to "+Math.round(mx.v)+" DU";
+    $("l2").textContent="Lowest month";$("ci").textContent=MN[mn.m]+" "+mn.y+" ("+mn.v.toFixed(0)+" DU)";
+    $("l3").textContent="Highest month";$("n").textContent=MN[mx.m]+" "+mx.y+" ("+mx.v.toFixed(0)+" DU)";
+    $("l4").textContent="Months / daily values";$("r1").textContent=P.length+" / "+(state.dd.length||"–");
+    $("explain").textContent=(real?"This record has "+P.length+" months, so it shows the seasonal cycle only. Ozone is highest in the cold season and lowest in late summer and autumn. A long-term trend needs at least 3 years: add more years with a CSV file on the Explore screen.":"Choose at least 3 years to estimate a trend.");
+  }
+  buildVerify();
+}
+function drawChart(){
+  var P=state.pts,R=state.res,des=state.des&&R;
+  var W=340,H=230,L=40,Rr=10,T=22,B=28;
+  var ys=P.map(function(p,i){return des?R.a[i]:p.v;});
+  var tl=R?P.map(function(p){return des?(R.ab+R.slope*(p.t-R.tb)):(R.vb+R.slope*(p.t-R.tb));}):[];
+  var dly=(!des&&state.dd.length)?state.dd.map(function(r){return{t:r[0]+(doy(r[0],r[1],r[2])-0.5)/365,v:r[3]};}):[];
+  var all=ys.concat(tl).concat(dly.map(function(d){return d.v;}));
+  var mn=Math.min.apply(null,all),mx=Math.max.apply(null,all),pad=(mx-mn)*0.08||1;mn-=pad;mx+=pad;
+  var t0=P[0].t,t1=P[P.length-1].t;
+  if(t1-t0<0.5){t0=P[0].y;t1=P[0].y+1;}
+  if(dly.length){t0=Math.min(t0,P[0].y);t1=Math.max(t1,P[P.length-1].y+1);}
+  function X(t){return L+(t-t0)/(t1-t0)*(W-L-Rr);}
+  function Y(v){return T+(1-(v-mn)/(mx-mn))*(H-T-B);}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Ozone time series chart">',k;
+  for(k=0;k<=4;k++){var v=mn+(mx-mn)*k/4,yy=Y(v);
+    s+='<line x1="'+L+'" x2="'+(W-Rr)+'" y1="'+yy+'" y2="'+yy+'" stroke="#e5e9f2"/><text x="'+(L-4)+'" y="'+(yy+4)+'" font-size="10" text-anchor="end" fill="#4f5a70">'+v.toFixed(0)+'</text>';}
+  var span=t1-t0;
+  if(span<=1.01){
+    for(k=0;k<12;k+=2){s+='<text x="'+X(t0+(k+0.5)/12*span)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="#4f5a70">'+MN[k]+'</text>';}
+  }else{
+    var step=Math.max(1,Math.round(span/5));
+    for(var yr=Math.ceil(t0);yr<=t1;yr+=step){s+='<text x="'+X(yr)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="#4f5a70">'+yr+'</text>';}
+  }
+  s+='<text x="4" y="10" font-size="10" fill="#4f5a70">'+(des?"DU (no seasons)":"DU")+'</text>';
+  dly.forEach(function(d){s+='<circle cx="'+X(d.t).toFixed(1)+'" cy="'+Y(d.v).toFixed(1)+'" r="1.6" fill="#2a5bd7" opacity=".28"/>';});
+  var d=P.map(function(p,i){return(i?"L":"M")+X(p.t).toFixed(1)+" "+Y(ys[i]).toFixed(1);}).join(" ");
+  s+='<path d="'+d+'" fill="none" stroke="#2a5bd7" stroke-width="2"/>';
+  P.forEach(function(p,i){s+='<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(ys[i]).toFixed(1)+'" r="2.6" fill="#2a5bd7"/>';});
+  if(R)s+='<line x1="'+X(P[0].t)+'" y1="'+Y(tl[0])+'" x2="'+X(P[P.length-1].t)+'" y2="'+Y(tl[tl.length-1])+'" stroke="#ea7a10" stroke-width="2.5"/>';
+  s+='<text x="'+(W-Rr)+'" y="'+(T+10)+'" font-size="10" text-anchor="end" font-weight="700" fill="'+(isReal(state.src)?"#14663a":"#9a4a05")+'">'+(isReal(state.src)?"NASA OMI DATA":"SAMPLE DATA")+'</text>';
+  s+='</svg>';
+  $("chart").innerHTML=s;
+  $("t-raw").classList.toggle("on",!des);$("t-des").classList.toggle("on",!!des);
+  $("legend").textContent=(dly.length?"Faint dots: daily values. ":"")+"Blue line: monthly means."+(R?" Orange line: fitted trend.":"");
+}
+function buildVerify(){
+  var real=isReal(state.src),h="";
+  function row(a,b,cls){h+='<div class="stat"><span>'+a+'</span><b class="'+(cls||"")+'">'+b+'</b></div>';}
+  if(real){
+    var dd=state.dd,nN=dd.filter(function(r){return r[5]===1;}).length;
+    var first=dd.length?dd[0]:null,last=dd.length?dd[dd.length-1]:null;
+    function fd(r){return r?r[0]+"-"+("0"+r[1]).slice(-2)+"-"+("0"+r[2]).slice(-2):"–";}
+    var span=first?((Date.UTC(last[0],last[1]-1,last[2])-Date.UTC(first[0],first[1]-1,first[2]))/864e5+1):0;
+    row("Product","OMI/Aura total-column ozone, Level 3e daily, 0.25° grid (GES DISC)");
+    row("Retrieved via","NOAA GML time-series tool");
+    row("Unit","Dobson Units (as stated by the tool)","okk");
+    row("Daily values",dd.length+" ("+fd(first)+" to "+fd(last)+")");
+    row("Days with a value",span?Math.round(100*dd.length/span)+"%":"–");
+    row("Edge-of-cell flag (N)",nN+" days");
+    row("Value used","Interpolated to the exact point");
+    row("Months used",state.pts.length+" (min. "+MINOBS+" days each)");
+    row("Product version","TO CONFIRM","todo");
+    row("Quality flags","Provider screening only","todo");
+  }else{
+    row("NASA product","None: sample data","todo");row("Product version","Not applicable","todo");row("Units","DU (illustration)","todo");
+    row("Quality flags","Not applicable","todo");row("Time coverage","Made up","todo");row("Missing data","None (made up)","todo");
+  }
+  $("vlist").innerHTML=h;
+}
+function toCSV(){
+  if(!state.pts.length)return;
+  var real=isReal(state.src),R=state.res;
+  var rows=[real?"# NASA OMI total-column ozone via NOAA GML time-series tool. Monthly means of daily values. Built by O3-NET-1 (independent concept).":"# SAMPLE DATA - NOT NASA OBSERVATIONS - for testing only",
+    "year,month,mean_DU,daily_values,"+(R?"value_without_seasons_DU,":"")+"data_type"];
+  state.pts.forEach(function(p,i){rows.push(p.y+","+("0"+(p.m+1)).slice(-2)+","+p.v.toFixed(2)+","+(p.n===null?"":p.n)+","+(R?R.a[i].toFixed(2)+",":"")+(real?"NASA_OMI":"SAMPLE_NOT_NASA"));});
+  try{var b=new Blob([rows.join("\n")],{type:"text/csv"}),u=URL.createObjectURL(b),a=document.createElement("a");
+    a.href=u;a.download="o3net1_monthly.csv";document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(u);},2000);
+  }catch(e){}
+}
+function parseNoaa(text){
+  var out=[],lat=null,lon=null;
+  text.split(/\r?\n/).forEach(function(l){
+    var m=/^#\s*Latitude:\s*(-?[\d.]+)/.exec(l);if(m)lat=m[1];
+    m=/^#\s*Longitude:\s*(-?[\d.]+)/.exec(l);if(m)lon=m[1];
+    if(!l.trim()||l.charAt(0)==="#")return;
+    var c=l.split(",").map(function(x){return x.trim();});
+    if(c.length<6||!/^\d{4}$/.test(c[0]))return;
+    var y=+c[0],mo=+c[1],d=+c[2],nn=parseFloat(c[4]),ip=parseFloat(c[5]);
+    if(!(mo>=1&&mo<=12&&d>=1&&d<=31))return;
+    var v=isFinite(ip)?ip:nn;
+    if(!isFinite(v)||v<=50||v>700)return;
+    out.push([y,mo,d,v,isFinite(nn)?nn:v,(c[6]||"Y")==="N"?1:0]);
+  });
+  return{rows:out,lat:lat,lon:lon};
+}
+function onFiles(ev){
+  var files=Array.prototype.slice.call(ev.target.files||[]);if(!files.length)return;
+  var done=0,all=[],lat=null,lon=null,bad=0;
+  files.forEach(function(f){
+    var fr=new FileReader();
+    fr.onload=function(){var r=parseNoaa(String(fr.result));if(!r.rows.length)bad++;all=all.concat(r.rows);lat=lat||r.lat;lon=lon||r.lon;if(++done===files.length)finish();};
+    fr.onerror=function(){bad++;if(++done===files.length)finish();};
+    fr.readAsText(f);
+  });
+  function finish(){
+    var seen={},u=[];all.forEach(function(r){var k=r[0]+"-"+r[1]+"-"+r[2];if(!seen[k]){seen[k]=1;u.push(r);}});
+    u.sort(function(a,b){return (a[0]-b[0])||(a[1]-b[1])||(a[2]-b[2]);});
+    if(!u.length){$("fmsg").textContent="No data rows found. Use the text/CSV output of the NOAA tool.";return;}
+    state.daily.file=u;state.meta.file="Your CSV"+(lat&&lon?" ("+lat+"°, "+lon+"°)":"");
+    state.src="file";fillSources();fillYears();
+    $("fmsg").textContent="Loaded "+u.length+" daily values ("+u[0][0]+"–"+u[u.length-1][0]+")"+(bad?"; "+bad+" file(s) had no usable rows":"")+". Tap Analyze.";
+  }
+}
+fillSources();fillYears();
+$("region").addEventListener("change",function(){state.src=$("region").value;fillYears();});
+$("go").addEventListener("click",run);
+$("csv").addEventListener("click",toCSV);
+$("file").addEventListener("change",onFiles);
+$("t-raw").addEventListener("click",function(){state.des=false;drawChart();});
+$("t-des").addEventListener("click",function(){state.des=true;drawChart();});
+Array.prototype.forEach.call(document.querySelectorAll("nav button"),function(b){
+  b.addEventListener("click",function(){var v=b.getAttribute("data-v");if(v==="analyze"&&!state.pts.length){run();}else{show(v);}});
+});
+window.O3NET={analyze:analyze,monthly:monthly,parseNoaa:parseNoaa};
+run();show("explore");
+})();
+</script>
+</body>
+</html>

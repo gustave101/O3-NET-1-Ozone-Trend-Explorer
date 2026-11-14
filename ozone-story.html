@@ -1,0 +1,345 @@
+<!doctype html>
+<!-- O3-NET-1 ozone recovery story. Built with AI assistance (Claude, Anthropic); content reviewed by the team. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O3-NET-1 Ozone Recovery Story</title>
+<meta name="generator" content="Hand-assembled with AI assistance (Claude, Anthropic)">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: one phone-first stage. Animated schematic on top, one step of text below, fixed Prev/Next bar. */
+:root{
+  --bg:#f1f5f7; --panel:#ffffff; --fg:#10222b; --muted:#4d626c; --line:#d0dce2;
+  --ozone:#0b7f93; --uv:#c4690f; --cl:#3b8a27; --bad:#b4432b; --scene:#e4eff4; --band:#0b7f93;
+  --head:'Space Grotesk','Inter',system-ui,sans-serif; --body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a151b; --panel:#112028; --fg:#e4eff3; --muted:#93a9b3; --line:#25404b;
+    --ozone:#4cc3d6; --uv:#f0a352; --cl:#7cc65a; --bad:#f08a6c; --scene:#0e2530; --band:#4cc3d6; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a151b; --panel:#112028; --fg:#e4eff3; --muted:#93a9b3; --line:#25404b;
+  --ozone:#4cc3d6; --uv:#f0a352; --cl:#7cc65a; --bad:#f08a6c; --scene:#0e2530; --band:#4cc3d6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-block:16px 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--head);font-weight:700;font-size:15px;letter-spacing:.02em}
+.brand small{display:block;font-family:var(--body);font-weight:500;color:var(--muted);font-size:12px;letter-spacing:0}
+.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.lang button{border:0;background:transparent;color:var(--muted);padding:7px 12px;font:600 13px var(--body);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ozone);color:var(--bg)}
+.dots{display:flex;gap:6px}
+.dots button{flex:1;height:6px;padding:0;border:0;border-radius:3px;background:var(--line);cursor:pointer}
+.dots button.on{background:var(--ozone)}
+.dots button.done{background:var(--muted)}
+.stage{background:var(--scene);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+svg{display:block;width:100%;height:auto}
+.sc{display:none}
+svg[data-step="1"] #sc1,svg[data-step="2"] #sc2,svg[data-step="3"] #sc3,svg[data-step="4"] #sc4,
+svg[data-step="5"] #sc5,svg[data-step="6"] #sc6,svg[data-step="7"] #sc7{display:inline}
+.tx{fill:var(--fg);font:600 10.5px var(--body)}
+.tm{fill:var(--muted);font:500 10px var(--body)}
+.ta{fill:var(--uv);font:700 10.5px var(--body)}
+.tb{fill:var(--bad);font:700 10px var(--body);letter-spacing:.06em}
+.atom{fill:var(--ozone)} .cl{fill:var(--cl)} .uvf{fill:var(--uv)} .ln{stroke:var(--line);stroke-width:1.5;fill:none}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.tag{align-self:flex-start;font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px;border:1px solid var(--ozone);color:var(--ozone)}
+.tag.hyp{border-color:var(--bad);color:var(--bad)}
+.tag.proj{border-color:var(--muted);color:var(--muted)}
+h1{margin:0;font:700 24px/1.2 var(--head);text-wrap:balance}
+p{margin:0;max-width:65ch}
+.say{border-top:1px dashed var(--line);padding-top:10px;color:var(--muted);font-size:14px}
+.say b{color:var(--fg);font-family:var(--head);font-weight:700;letter-spacing:.04em;font-size:12px;text-transform:uppercase;display:block;margin-bottom:2px}
+.note{font-size:14px;color:var(--bad)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{border:1px solid var(--line);border-radius:6px;padding:4px 9px;font-size:13px;font-variant-numeric:tabular-nums}
+details{font-size:13px;color:var(--muted)}
+summary{cursor:pointer;font-weight:600}
+details a{color:var(--ozone)}
+details ul{padding-left:18px;margin:8px 0 0}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);
+  padding:10px max(16px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px))}
+nav .in{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center}
+nav button{flex:1;padding:13px;border-radius:10px;border:1px solid var(--ozone);background:transparent;color:var(--ozone);font:600 16px var(--body);cursor:pointer}
+nav button.p{background:var(--ozone);color:var(--bg)}
+nav button:disabled{opacity:.35;cursor:default}
+nav .c{flex:0 0 auto;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+button:focus-visible{outline:3px solid var(--uv);outline-offset:2px}
+/* animation */
+@keyframes flow{to{stroke-dashoffset:-24}}
+@keyframes hl{0%,30%{opacity:1}38%,100%{opacity:.28}}
+@keyframes rise{0%{transform:translateY(0);opacity:1}70%{transform:translateY(-120px);opacity:1}85%,100%{transform:translateY(-120px);opacity:0}}
+@keyframes zap{0%,60%{opacity:0}70%,85%{opacity:1}100%{opacity:0}}
+@keyframes clmove{0%{transform:translate(120px,100px)}18%{transform:translate(160px,140px)}30%{transform:translate(200px,100px)}45%{transform:translate(236px,140px)}57%{transform:translate(270px,100px)}72%{transform:translate(312px,140px)}90%,100%{transform:translate(312px,100px)}}
+@keyframes die1{0%,18%{opacity:1}24%,96%{opacity:.08}100%{opacity:1}}
+@keyframes die2{0%,45%{opacity:1}51%,96%{opacity:.08}100%{opacity:1}}
+@keyframes die3{0%,72%{opacity:1}78%,96%{opacity:.08}100%{opacity:1}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes travel{0%{transform:translateX(0)}100%{transform:translateX(270px)}}
+@keyframes fade{0%,10%{transform:scaleX(1)}85%,100%{transform:scaleX(0)}}
+@keyframes beam{0%,100%{opacity:.12}50%{opacity:.34}}
+.uvray{stroke:var(--uv);stroke-width:2.5;stroke-dasharray:7 5;animation:flow 1s linear infinite}
+.r1{animation:hl 6s infinite} .r2{animation:hl 6s infinite;animation-delay:-4s} .r3{animation:hl 6s infinite;animation-delay:-2s}
+.cfc{animation:rise 5s ease-in infinite}
+.zap{animation:zap 5s infinite}
+.clatom{animation:clmove 9s linear infinite}
+.o1{animation:die1 9s infinite}.o2{animation:die2 9s infinite}.o3{animation:die3 9s infinite}
+.bar{transform-box:fill-box;transform-origin:0 50%;animation:grow 1.4s ease-out both}
+.b2{animation-delay:.3s}.b3{animation-delay:.6s}
+.ev{transform-box:fill-box;transform-origin:center;animation:pop .4s ease-out both}
+.e2{animation-delay:.5s}.e3{animation-delay:1s}.e4{animation-delay:1.5s}
+.trace{stroke-dasharray:1;stroke-dashoffset:0;animation:draw 2.6s ease-out both}
+.dot6{animation:travel 4s linear infinite}
+.fadebar{transform-box:fill-box;transform-origin:0 50%;animation:fade 5s ease-in-out infinite}
+.beam{animation:beam 2.4s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
+[hidden]{display:none!important}body{margin:0}.lang{display:none}.aiw{font-size:12px;color:var(--muted)}
+</style>
+
+</head><body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">O3-NET-1<small id="sub"></small></div>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="l-en" aria-pressed="true">EN</button><button id="l-uz" aria-pressed="false">UZ</button>
+    </div>
+  </div>
+  <div class="dots" id="dots"></div>
+
+  <div class="stage">
+  <svg id="svg" viewBox="0 0 360 230" data-step="1" role="img" aria-labelledby="ttl">
+    <title id="ttl">Animated schematic</title>
+
+    <!-- 1: the layer -->
+    <g class="sc" id="sc1">
+      <rect x="0" y="195" width="360" height="35" fill="var(--line)"/>
+      <rect x="0" y="62" width="360" height="52" fill="var(--band)" opacity=".28"/>
+      <line x1="0" y1="62" x2="360" y2="62" class="ln" stroke-dasharray="3 4"/>
+      <line x1="0" y1="114" x2="360" y2="114" class="ln" stroke-dasharray="3 4"/>
+      <circle cx="320" cy="26" r="15" class="uvf"/>
+      <line class="uvray" x1="262" y1="22" x2="262" y2="62"/>
+      <line class="uvray" x1="222" y1="22" x2="222" y2="62"/>
+      <line class="uvray" x1="182" y1="22" x2="182" y2="62"/>
+      <line class="uvray" x1="142" y1="22" x2="142" y2="62" style="opacity:.9"/>
+      <line class="uvray" x1="102" y1="130" x2="102" y2="190" style="opacity:.3"/>
+      <text class="ta" x="10" y="34">UV-B</text>
+      <text class="tx" x="10" y="92">Ozone layer · mostly 15–35 km</text>
+      <text class="tm" x="10" y="148">Weather happens down here</text>
+      <text class="tm" x="116" y="164" >Only a little UV reaches the ground</text>
+      <text class="tm" x="10" y="215">Ground · not to scale</text>
+    </g>
+
+    <!-- 2: how nature makes it -->
+    <g class="sc" id="sc2">
+      <g class="r1">
+        <text class="tm" x="10" y="26">1 · UV splits oxygen</text>
+        <circle class="atom" cx="52" cy="48" r="9"/><circle class="atom" cx="70" cy="48" r="9"/><text class="tx" x="90" y="52">O₂</text>
+        <path d="M130 48h52" class="ln" stroke="var(--uv)" stroke-width="2.5"/><text class="ta" x="144" y="40">UV</text>
+        <circle class="atom" cx="232" cy="48" r="9"/><circle class="atom" cx="268" cy="48" r="9"/><text class="tx" x="290" y="52">O + O</text>
+      </g>
+      <g class="r2">
+        <text class="tm" x="10" y="100">2 · An atom joins O₂</text>
+        <circle class="atom" cx="40" cy="124" r="9"/><circle class="atom" cx="68" cy="124" r="9"/><circle class="atom" cx="86" cy="124" r="9"/>
+        <path d="M130 124h52" class="ln" stroke="var(--fg)" stroke-width="2"/>
+        <circle class="atom" cx="232" cy="124" r="9"/><circle class="atom" cx="250" cy="114" r="9"/><circle class="atom" cx="268" cy="124" r="9"/><text class="tx" x="290" y="128">O₃ ozone</text>
+      </g>
+      <g class="r3">
+        <text class="tm" x="10" y="176">3 · UV breaks ozone again</text>
+        <circle class="atom" cx="52" cy="200" r="9"/><circle class="atom" cx="70" cy="190" r="9"/><circle class="atom" cx="88" cy="200" r="9"/>
+        <path d="M130 200h52" class="ln" stroke="var(--uv)" stroke-width="2.5"/><text class="ta" x="144" y="192">UV</text>
+        <circle class="atom" cx="232" cy="200" r="9"/><circle class="atom" cx="250" cy="200" r="9"/><circle class="atom" cx="284" cy="200" r="9"/><text class="tx" x="300" y="204">O₂ + O</text>
+      </g>
+    </g>
+
+    <!-- 3: chlorine -->
+    <g class="sc" id="sc3">
+      <rect x="0" y="62" width="360" height="130" fill="var(--band)" opacity=".16"/>
+      <text class="tm" x="10" y="78">Stratosphere</text>
+      <g class="cfc"><circle cx="48" cy="205" r="13" fill="var(--muted)"/><circle class="cl" cx="64" cy="196" r="6"/><text class="tx" x="26" y="226">CFC</text></g>
+      <g class="zap"><path d="M42 48l6 12-8-4 6 14" fill="none" stroke="var(--uv)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><text class="ta" x="58" y="56">UV frees Cl</text></g>
+      <g class="o1"><circle class="atom" cx="152" cy="168" r="8"/><circle class="atom" cx="168" cy="160" r="8"/><circle class="atom" cx="184" cy="168" r="8"/></g>
+      <g class="o2"><circle class="atom" cx="228" cy="168" r="8"/><circle class="atom" cx="244" cy="160" r="8"/><circle class="atom" cx="260" cy="168" r="8"/></g>
+      <g class="o3"><circle class="atom" cx="304" cy="168" r="8"/><circle class="atom" cx="320" cy="160" r="8"/><circle class="atom" cx="336" cy="168" r="8"/></g>
+      <g class="clatom"><circle class="cl" cx="0" cy="0" r="8"/><text x="-4" y="3.5" font-size="9" font-weight="700" fill="var(--bg)">Cl</text></g>
+      <text class="tx" x="150" y="212">Cl is not used up. It hits the next O₃.</text>
+    </g>
+
+    <!-- 4: Montreal -->
+    <g class="sc" id="sc4">
+      <path d="M30 105H330" class="ln" stroke="var(--line)" stroke-width="3"/>
+      <path class="trace" pathLength="1" d="M30 105H330" fill="none" stroke="var(--ozone)" stroke-width="3"/>
+      <g class="ev"><circle cx="45" cy="105" r="8" fill="var(--bad)"/><text class="tx" x="45" y="80" text-anchor="middle">1985</text><text class="tm" x="45" y="136" text-anchor="middle">Antarctic</text><text class="tm" x="45" y="148" text-anchor="middle">ozone hole</text><text class="tm" x="45" y="160" text-anchor="middle">reported</text></g>
+      <g class="ev e2"><circle cx="135" cy="105" r="8" fill="var(--ozone)"/><text class="tx" x="135" y="80" text-anchor="middle">1987</text><text class="tm" x="135" y="136" text-anchor="middle">Montreal</text><text class="tm" x="135" y="148" text-anchor="middle">Protocol</text><text class="tm" x="135" y="160" text-anchor="middle">signed</text></g>
+      <g class="ev e3"><circle cx="225" cy="105" r="8" fill="var(--ozone)"/><text class="tx" x="225" y="80" text-anchor="middle">1989</text><text class="tm" x="225" y="136" text-anchor="middle">Enters</text><text class="tm" x="225" y="148" text-anchor="middle">into</text><text class="tm" x="225" y="160" text-anchor="middle">force</text></g>
+      <g class="ev e4"><circle cx="315" cy="105" r="8" fill="var(--ozone)"/><text class="tx" x="315" y="80" text-anchor="middle">2016</text><text class="tm" x="315" y="136" text-anchor="middle">Kigali</text><text class="tm" x="315" y="148" text-anchor="middle">Amendment</text></g>
+      <text class="tm" x="10" y="215">Events in order, not to scale</text>
+    </g>
+
+    <!-- 5: recovery -->
+    <g class="sc" id="sc5">
+      <text class="tx" x="10" y="24">Projected return to 1980 ozone levels</text>
+      <g stroke="var(--line)" stroke-width="1"><line x1="113" y1="40" x2="113" y2="186"/><line x1="170" y1="40" x2="170" y2="186"/><line x1="226" y1="40" x2="226" y2="186"/><line x1="283" y1="40" x2="283" y2="186"/><line x1="340" y1="40" x2="340" y2="186"/></g>
+      <text class="tm" x="10" y="75">Near-global</text><text class="tm" x="10" y="87">60°N–60°S</text>
+      <rect class="bar" x="90" y="62" width="80" height="26" rx="3" fill="var(--ozone)"/><text class="tx" x="176" y="80">2040</text>
+      <text class="tm" x="10" y="124">Arctic</text>
+      <rect class="bar b2" x="90" y="108" width="108" height="26" rx="3" fill="var(--ozone)"/><text class="tx" x="204" y="126">2045</text>
+      <text class="tm" x="10" y="172">Antarctic</text>
+      <rect class="bar b3" x="90" y="154" width="228" height="26" rx="3" fill="var(--ozone)"/><text class="tx" x="322" y="172">2066</text>
+      <g class="tm" text-anchor="middle"><text x="113" y="202">2030</text><text x="170" y="202">2040</text><text x="226" y="202">2050</text><text x="283" y="202">2060</text><text x="340" y="202">2070</text></g>
+      <text class="tm" x="10" y="222">Bars start at 2026. Projections, not guarantees.</text>
+    </g>
+
+    <!-- 6: artificial ozone -->
+    <g class="sc" id="sc6">
+      <text class="tb" x="10" y="22">HYPOTHETICAL · NOT PART OF O3-NET-1</text>
+      <g fill="var(--panel)" stroke="var(--line)" stroke-width="1.5">
+        <rect x="8" y="40" width="76" height="62" rx="6"/><rect x="96" y="40" width="76" height="62" rx="6"/>
+        <rect x="184" y="40" width="76" height="62" rx="6"/><rect x="272" y="40" width="80" height="62" rx="6" stroke="var(--bad)"/>
+      </g>
+      <g class="tx" text-anchor="middle">
+        <text x="46" y="62">Make</text><text x="46" y="75">ozone</text><text class="tm" x="46" y="92">huge energy</text>
+        <text x="134" y="62">Lift to</text><text x="134" y="75">15–35 km</text><text class="tm" x="134" y="92">no method yet</text>
+        <text x="222" y="62">Spread</text><text x="222" y="75">worldwide</text><text class="tm" x="222" y="92">very large mass</text>
+        <text x="312" y="62" fill="var(--bad)">Destroyed</text><text x="312" y="75" fill="var(--bad)">in ~1 year</text><text class="tm" x="312" y="92">by Cl and Br</text>
+      </g>
+      <circle class="dot6 uvf" cx="46" cy="118" r="5"/>
+      <line x1="46" y1="118" x2="316" y2="118" class="ln" stroke-dasharray="3 4"/>
+      <text class="tx" x="10" y="150">Added ozone left in the stratosphere</text>
+      <rect x="10" y="158" width="340" height="14" rx="3" fill="var(--line)"/>
+      <rect class="fadebar" x="10" y="158" width="340" height="14" rx="3" fill="var(--ozone)"/>
+      <text class="tm" x="10" y="190">Year 0</text><text class="tm" x="350" y="190" text-anchor="end">Year 1</text>
+      <text class="tx" x="10" y="214">So it must be topped up again and again.</text>
+    </g>
+
+    <!-- 7: O3-NET-1 -->
+    <g class="sc" id="sc7">
+      <rect x="166" y="14" width="28" height="16" rx="3" fill="var(--fg)"/>
+      <rect x="132" y="18" width="30" height="8" fill="var(--ozone)"/><rect x="198" y="18" width="30" height="8" fill="var(--ozone)"/>
+      <polygon class="beam" points="180,32 100,112 260,112" fill="var(--ozone)"/>
+      <text class="tm" x="10" y="26">Satellite</text><text class="tm" x="10" y="38">instrument</text>
+      <text class="tm" x="270" y="76">Total-column</text><text class="tm" x="270" y="88">ozone, in DU</text>
+      <line x1="40" y1="128" x2="40" y2="208" class="ln" stroke="var(--muted)"/><line x1="40" y1="208" x2="340" y2="208" class="ln" stroke="var(--muted)"/>
+      <polyline class="trace" pathLength="1" fill="none" stroke="var(--ozone)" stroke-width="2" stroke-linejoin="round"
+        points="44,182 60,170 76,186 92,168 108,176 124,160 140,172 156,152 172,166 188,148 204,160 220,142 236,156 252,138 268,150 284,134 300,146 316,130 332,140"/>
+      <line x1="44" y1="178" x2="332" y2="138" stroke="var(--uv)" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <text class="tb" x="344" y="124" text-anchor="end">ILLUSTRATION · NOT REAL DATA</text>
+      <text class="tm" x="44" y="222">Time →</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="card" id="card">
+    <span class="tag" id="tag"></span>
+    <h1 id="h"></h1>
+    <p id="b"></p>
+    <p class="note" id="n" hidden></p>
+    <div class="chips" id="chips" hidden></div>
+    <div class="say"><b id="sayl"></b><span id="say"></span></div>
+  </div>
+
+  <details>
+    <summary id="srcs"></summary>
+    <ul>
+      <li><a href="https://csl.noaa.gov/assessments/ozone/2022/executivesummary/" target="_blank" rel="noopener">NOAA CSL: Scientific Assessment of Ozone Depletion 2022, executive summary</a></li>
+      <li><a href="https://csl.noaa.gov/assessments/ozone/2010/twentyquestions/additionaltopics/rlos.html" target="_blank" rel="noopener">NOAA CSL: replacing lost ozone artificially (additional topic, 2010 Twenty Questions)</a></li>
+      <li><a href="https://ozoneaq.gsfc.nasa.gov/data/omi/" target="_blank" rel="noopener">NASA OMI/Aura ozone data</a></li>
+    </ul>
+  </details>
+</div>
+
+<p class="aiw" style="max-width:560px;margin:8px auto 0;padding:0 16px">Built with AI assistance (Claude, Anthropic). Facts: NOAA CSL and the UN/WMO Ozone Assessment 2022. O3-NET-1 is an independent concept, not an official NASA project.</p>
+<nav><div class="in">
+  <button id="prev" type="button"></button><span class="c" id="cnt"></span><button id="next" class="p" type="button"></button>
+</div></nav>
+
+<script>
+(function(){
+"use strict";
+var S=[
+{k:"est",
+ t:{en:"What is the ozone layer?",uz:"Ozon qatlami nima?"},
+ b:{en:"A thin part of the stratosphere, mostly 15–35 km up, holds most of the planet's ozone (O₃). It absorbs most of the Sun's harmful UV-B light before it reaches the ground.",
+    uz:"Stratosferaning asosan 15–35 km balandlikdagi yupqa qismida Yerdagi ozon (O₃) ning katta qismi joylashgan. U Quyoshning zararli UV-B nurlarining ko'pini yer yuziga yetmasdan yutadi."},
+ s:{en:"The ozone layer is Earth's sunscreen.",uz:"Ozon qatlami Yerning quyoshdan saqlovchi qalqonidir."}},
+{k:"est",
+ t:{en:"How nature makes ozone",uz:"Tabiat ozonni qanday hosil qiladi"},
+ b:{en:"UV light splits an oxygen molecule (O₂) into two atoms. Each atom can join another O₂ and form ozone (O₃). UV also breaks ozone apart again, so nature keeps a balance.",
+    uz:"UV nur kislorod molekulasini (O₂) ikki atomga ajratadi. Har bir atom boshqa O₂ bilan birikib ozon (O₃) hosil qiladi. UV ozonni qayta parchalaydi ham, shuning uchun tabiatda muvozanat saqlanadi."},
+ s:{en:"Ozone is made and destroyed all the time. In nature the two are balanced.",uz:"Ozon doimo hosil bo'ladi va parchalanadi. Tabiatda bu ikkisi muvozanatda."}},
+{k:"est",
+ t:{en:"What damaged it",uz:"Uni nima buzdi"},
+ b:{en:"CFC chemicals, once used in fridges and spray cans, rose to the stratosphere. UV freed their chlorine atoms. One chlorine atom can destroy thousands of ozone molecules, because it is released again after each reaction.",
+    uz:"Muzlatgich va purkagichlarda ishlatilgan CFC moddalari stratosferaga ko'tarildi. UV ularning xlor atomlarini ajratib chiqardi. Bitta xlor atomi minglab ozon molekulasini yo'q qilishi mumkin, chunki har reaksiyadan keyin u yana ozod bo'ladi."},
+ s:{en:"Chlorine is a catalyst. It is not used up, so it keeps destroying ozone.",uz:"Xlor katalizator. U sarflanmaydi, shuning uchun ozonni yo'q qilishda davom etadi."}},
+{k:"est",
+ t:{en:"The world acts",uz:"Dunyo choralar ko'rdi"},
+ b:{en:"In 1985 scientists reported the Antarctic ozone hole. In 1987 countries signed the Montreal Protocol to phase out ozone-depleting chemicals. It entered into force in 1989. The 2016 Kigali Amendment later cut HFCs, a climate measure.",
+    uz:"1985-yilda olimlar Antarktida ustidagi ozon teshigini e'lon qildi. 1987-yilda davlatlar ozonni yemiruvchi moddalarni bosqichma-bosqich to'xtatish uchun Monreal protokolini imzoladi. U 1989-yilda kuchga kirdi. 2016-yilgi Kigali tuzatishi keyinroq HFC larni qisqartirdi (bu iqlim uchun chora)."},
+ s:{en:"The Montreal Protocol is the main reason the ozone layer can heal.",uz:"Monreal protokoli ozon qatlami tiklanishining asosiy sababi."}},
+{k:"proj",
+ t:{en:"Natural recovery",uz:"Tabiiy tiklanish"},
+ b:{en:"As these chemicals decline, ozone slowly recovers by itself. The 2022 UN/WMO assessment projects a return to 1980 levels around 2040 (near-global), 2045 (Arctic) and 2066 (Antarctic). These are projections, not guarantees.",
+    uz:"Bu moddalar kamayishi bilan ozon asta-sekin o'zi tiklanmoqda. 2022-yilgi BMT/JMT baholashiga ko'ra, 1980-yil darajasiga qaytish taxminan 2040 (deyarli butun dunyo), 2045 (Arktika) va 2066 (Antarktida) yillarda kutilmoqda. Bu bashorat, kafolat emas."},
+ s:{en:"The layer is healing slowly. Cutting the cause worked.",uz:"Qatlam sekin tiklanmoqda. Sababni kamaytirish ish berdi."}},
+{k:"hyp",
+ t:{en:"Could we add artificial ozone?",uz:"Sun'iy ozon qo'shsak-chi?"},
+ b:{en:"This is a hypothetical idea, and it is not part of O3-NET-1. Scientists assess it as impractical. Added ozone would be destroyed by chlorine and bromine in about a year. Offsetting a 3% global loss needs about 90 megatons spread through the stratosphere, huge energy, and a delivery method that does not exist yet.",
+    uz:"Bu faqat faraz, va O3-NET-1 ning qismi emas. Olimlar uni amaliy emas deb baholaydi. Qo'shilgan ozon taxminan bir yilda xlor va brom tomonidan yo'q qilinadi. Dunyo bo'yicha 3% yo'qotishni qoplash uchun stratosferaga tarqatilgan taxminan 90 megatonna, katta energiya va hali mavjud bo'lmagan yetkazish usuli kerak."},
+ n:{en:"Warning: ozone made near the ground is a harmful pollutant. Never confuse it with the protective layer.",uz:"Ogohlantirish: yer yaqinida hosil bo'lgan ozon zararli ifloslantiruvchi. Uni himoya qatlami bilan adashtirmang."},
+ c:{en:["~90 Mt for 3% loss","~1 year lifetime","No delivery method"],uz:["3% uchun ~90 Mt","~1 yil yashaydi","Yetkazish usuli yo'q"]},
+ s:{en:"We checked the artificial ozone idea. Experts say it is not practical. Reducing the cause works better.",uz:"Sun'iy ozon g'oyasini ko'rib chiqdik. Mutaxassislar uni amaliy emas deydi. Sababni kamaytirish yaxshiroq ishlaydi."}},
+{k:"prj",
+ t:{en:"Where O3-NET-1 helps",uz:"O3-NET-1 qayerda yordam beradi"},
+ b:{en:"Recovery is slow and uneven, so it has to be measured. O3-NET-1 is a concept tool for exploring satellite total-column ozone in Dobson Units (DU), seeing a trend with its uncertainty, and verifying the data source. The chart here is an illustration only.",
+    uz:"Tiklanish sekin va notekis, shuning uchun uni o'lchash kerak. O3-NET-1 sun'iy yo'ldoshdagi total-column ozonni Dobson birligida (DU) ko'rish, trendni noaniqligi bilan baholash va ma'lumot manbasini tekshirish uchun konsept vositadir. Bu yerdagi grafik faqat tasvir."},
+ n:{en:"",uz:""},
+ c:{en:["Explore","Analyze","Verify"],uz:["Explore · tanlash","Analyze · tahlil","Verify · tekshirish"]},
+ s:{en:"We do not fix the ozone layer. We help people see whether it is recovering, with clear evidence. O3-NET-1 is an independent concept, not an official NASA project.",uz:"Biz ozon qatlamini tuzatmaymiz. Odamlarga u tiklanayotganini aniq dalillar bilan ko'rishga yordam beramiz. O3-NET-1 mustaqil konsept, NASA ning rasmiy loyihasi emas."}}
+];
+var UI={en:{sub:"Ozone recovery, step by step",prev:"Back",next:"Next",say:"Say to the judges",src:"Sources",est:"Established science",proj:"Projection",hyp:"Hypothetical idea",prj:"This project",of:" of "},
+        uz:{sub:"Ozon tiklanishi, bosqichma-bosqich",prev:"Orqaga",next:"Keyingi",say:"Hakamlarga ayting",src:"Manbalar",est:"Tasdiqlangan fan",proj:"Bashorat",hyp:"Faraz g'oya",prj:"Bizning loyiha",of:" / "}};
+var i=0,lang="en",$=function(id){return document.getElementById(id);};
+try{var sv=localStorage.getItem("o3lang");}catch(e){}
+var dots=$("dots");
+S.forEach(function(_,k){var b=document.createElement("button");b.type="button";b.setAttribute("aria-label","Step "+(k+1));b.addEventListener("click",function(){go(k);});dots.appendChild(b);});
+function go(k){i=Math.max(0,Math.min(S.length-1,k));try{history.replaceState(null,"","#step"+(i+1));}catch(e){}render();}
+function render(){
+  var s=S[i],u=UI[lang];
+  $("svg").setAttribute("data-step",i+1);
+  $("sub").textContent=u.sub;
+  $("tag").textContent=u[s.k];$("tag").className="tag "+(s.k==="hyp"?"hyp":s.k==="proj"?"proj":"");
+  $("h").textContent=(i+1)+". "+s.t[lang];
+  $("b").textContent=s.b[lang];
+  var n=$("n");n.hidden=!(s.n&&s.n[lang]);n.textContent=s.n?s.n[lang]:"";
+  var c=$("chips");c.hidden=!s.c;c.innerHTML="";
+  if(s.c){s.c[lang].forEach(function(x){var e=document.createElement("span");e.textContent=x;c.appendChild(e);});}
+  $("sayl").textContent=u.say;$("say").textContent="“"+s.s[lang]+"”";
+  $("srcs").textContent=u.src;
+  $("prev").textContent=u.prev;$("next").textContent=u.next;
+  $("prev").disabled=i===0;$("next").disabled=i===S.length-1;
+  $("cnt").textContent=(i+1)+u.of+S.length;
+  Array.prototype.forEach.call(dots.children,function(d,k){d.className=k===i?"on":(k<i?"done":"");});
+  $("l-en").setAttribute("aria-pressed",lang==="en");$("l-uz").setAttribute("aria-pressed",lang==="uz");
+  document.documentElement.lang=lang==="uz"?"uz":"en";
+}
+function setLang(l){lang=l;try{localStorage.setItem("o3lang",l);}catch(e){}render();}
+$("l-en").addEventListener("click",function(){setLang("en");});
+$("l-uz").addEventListener("click",function(){setLang("uz");});
+$("prev").addEventListener("click",function(){go(i-1);});
+$("next").addEventListener("click",function(){go(i+1);});
+document.addEventListener("keydown",function(e){if(e.key==="ArrowRight")go(i+1);if(e.key==="ArrowLeft")go(i-1);});
+var x0=null;
+$("svg").addEventListener("touchstart",function(e){x0=e.touches[0].clientX;},{passive:true});
+$("svg").addEventListener("touchend",function(e){if(x0===null)return;var d=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(d)>50)go(i+(d<0?1:-1));},{passive:true});
+window.addEventListener("hashchange",function(){var m=/^#step(\d)$/.exec(location.hash);if(m){i=Math.max(0,Math.min(S.length-1,+m[1]-1));render();}});
+var m=/^#step(\d)$/.exec(location.hash);if(m)i=Math.max(0,Math.min(S.length-1,+m[1]-1));
+render();
+})();
+</script>
+
+</body></html>
