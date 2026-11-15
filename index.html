@@ -101,6 +101,7 @@ a.linkbtn{display:block;text-align:center;text-decoration:none;color:#fff;backgr
     <div class="stat"><span id="l2">95% interval</span><b id="ci">&ndash;</b></div>
     <div class="stat"><span id="l3">Months used</span><b id="n">&ndash;</b></div>
     <div class="stat"><span id="l4">Autocorrelation (lag 1)</span><b id="r1">&ndash;</b></div>
+    <div class="stat"><span id="l5">Significant at 95%?</span><b id="sig">&ndash;</b></div>
     <p id="explain" style="font-size:14px"></p>
     <button class="act sec" id="csv">Download table (CSV)</button>
   </div>
@@ -118,7 +119,7 @@ a.linkbtn{display:block;text-align:center;text-decoration:none;color:#fff;backgr
       <li>Daily values are averaged into monthly means (a month needs at least 8 daily values).</li>
       <li>The yearly cycle is removed by subtracting the average of each calendar month.</li>
       <li>A straight line is fitted (least squares). The 95% interval is widened if neighbouring months are correlated.</li>
-      <li>A trend is shown only for 3 years or more. We do not say &ldquo;statistically significant&rdquo;: that needs a proper test.</li>
+      <li>A trend is shown only for 3 years or more. A change is called significant only if the 95% interval excludes zero. This is an approximate test; a full analysis would also check the model.</li>
     </ul>
   </div>
   <div class="card">
@@ -265,15 +266,15 @@ function render(){
     $("rate").textContent=sgn(dec,2)+" DU per decade";
     $("l2").textContent="95% interval";$("ci").textContent=sgn(dec-hd,2)+" to "+sgn(dec+hd,2);
     $("l3").textContent="Months used";$("n").textContent=R.n;
-    $("l4").textContent="Autocorrelation (lag 1)";$("r1").textContent=R.r1.toFixed(2);
-    $("explain").textContent="After removing the yearly cycle, the ozone value is "+(dec>0?"rising":"falling")+" by about "+Math.abs(dec).toFixed(2)+" DU per decade over "+P[0].y+"–"+P[P.length-1].y+". The 95% interval "+(inc?"includes":"does not include")+" zero. "+(real?"This is an estimate for one place and one period"+((P[P.length-1].y-P[0].y+1)<10?". With only "+(P[P.length-1].y-P[0].y+1)+" years of data, natural year-to-year changes are as large as this signal, so it is not evidence of a long-term trend":"")+". It is not proof of a cause, and no significance test was applied.":"These are made-up numbers, not NASA observations.");
+    $("l4").textContent="Autocorrelation (lag 1)";$("r1").textContent=R.r1.toFixed(2);$("l5").textContent="Significant at 95%?";$("sig").textContent=inc?"No (interval includes 0)":"Yes (interval excludes 0)";
+    $("explain").textContent="After removing the yearly cycle, the ozone value is "+(dec>0?"rising":"falling")+" by about "+Math.abs(dec).toFixed(2)+" DU per decade over "+P[0].y+"–"+P[P.length-1].y+". The 95% interval "+(inc?"includes":"does not include")+" zero. "+(real?"This is an estimate for one place and one period"+((P[P.length-1].y-P[0].y+1)<10?". With only "+(P[P.length-1].y-P[0].y+1)+" years of data, natural year-to-year changes are as large as this signal, so it is not evidence of a long-term trend":"")+". It is not proof of a cause. The significance check is approximate: a straight-line model corrected for correlated months.":"These are made-up numbers, not NASA observations.");
   }else{
     var mn=P[0],mx=P[0];P.forEach(function(p){if(p.v<mn.v)mn=p;if(p.v>mx.v)mx=p;});
     $("rlabel").textContent="Seasonal range";
     $("rate").textContent=Math.round(mn.v)+" to "+Math.round(mx.v)+" DU";
     $("l2").textContent="Lowest month";$("ci").textContent=MN[mn.m]+" "+mn.y+" ("+mn.v.toFixed(0)+" DU)";
     $("l3").textContent="Highest month";$("n").textContent=MN[mx.m]+" "+mx.y+" ("+mx.v.toFixed(0)+" DU)";
-    $("l4").textContent="Months / daily values";$("r1").textContent=P.length+" / "+(state.dd.length||"–");
+    $("l5").textContent="Significant at 95%?";$("sig").textContent="Needs 3+ years";$("l4").textContent="Months / daily values";$("r1").textContent=P.length+" / "+(state.dd.length||"–");
     $("explain").textContent=(real?"This record has "+P.length+" months, so it shows the seasonal cycle only. Ozone is highest in the cold season and lowest in late summer and autumn. A long-term trend needs at least 3 years: add more years with a CSV file on the Explore screen.":"Choose at least 3 years to estimate a trend.");
   }
   buildVerify();
